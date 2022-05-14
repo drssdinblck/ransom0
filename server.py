@@ -54,7 +54,7 @@ class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write(self._html("hi!"))
+        self.wfile.write(b"Server is up!")
 
     def do_HEAD(self):
         self._set_headers()
@@ -100,7 +100,7 @@ class S(BaseHTTPRequestHandler):
             print("DATA HAVE BEEN SAVED")
             print()
 
-def run(server_class=HTTPServer, handler_class=S, addr="localhost", port=8000):
+def run(server_class=HTTPServer, handler_class=S, addr="0.0.0.0", port=8000):
     try:
         server_address = (addr, port)
         httpd = server_class(server_address, handler_class)

