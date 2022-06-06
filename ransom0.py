@@ -194,7 +194,7 @@ def DECRYPT_FILE():
         try:
             return input(prompt)
         except KeyboardInterrupt:
-            read_pretty_key()
+            return read_pretty_key()
 
     pretty_key = read_pretty_key("Input your decryption key: ")
 
