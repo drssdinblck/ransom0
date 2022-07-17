@@ -263,10 +263,10 @@ if __name__ == '__main__':
         digits = f.read()
         f.close()
         DECRYPT_FILE()
-        f = open(decrypted_path, 'w')
-        f.close()
-        if path.exists(bashrc_path):
-            remove(bashrc_path)
+        # g = open(decrypted_path, 'w')
+        # g.close()
+        # if path.exists(bashrc_path):
+        #     remove(bashrc_path)
     else:
         os.mkdir("logs")
         f = open("logs/digits.txt", "w")
