@@ -2,14 +2,10 @@
 <h1 align='center'>Ransom0</h1>
 
 <p align="center">
- <img src='https://www.codefactor.io/repository/github/hugolb0/ransom0/badge'>
- <img src='https://api.travis-ci.com/hugolb0/ransom0.svg?branch=master'>
- <img src='https://img.shields.io/badge/Windows%2C%20Mac%20%26%20Linux-compatible-brightgreen'>
- <img src='https://img.shields.io/github/release-date/HugoLB0/Ransom0'>
- <img src='https://img.shields.io/github/commit-activity/m/HugoLB0/Ransom0'>
- <img src='https://img.shields.io/github/last-commit/HugoLB0/Ransom0'>
+    This is a fork of
+    <a href="https://github.com/HugoLB0/Ransom0">HugoLB0's Ransom0</a> working
+    on terminal based machines. This was part of a university project.
 </p>
- 
  
 <p align="center">
   Ransom0 is an open source ransomware made with Python, designed to find and encrypt user data. 
